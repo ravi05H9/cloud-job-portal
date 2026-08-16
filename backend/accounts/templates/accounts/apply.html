@@ -1,0 +1,104 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Apply - {{ job.title }}</title>
+
+    <link rel="stylesheet" href="{% static 'jobs/style.css' %}">
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <a href="{% url 'job_list' %}" class="brand">
+        Cloud Job Portal
+    </a>
+
+    <div class="nav-links">
+
+        <a href="{% url 'job_list' %}">
+            Jobs
+        </a>
+
+        <a href="{% url 'my_applications' %}">
+            My Applications
+        </a>
+
+        <a href="{% url 'logout' %}">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<div class="container">
+
+    <div class="apply-container">
+
+        <h1>Apply for {{ job.title }}</h1>
+
+        <p>
+            <strong>Company:</strong>
+            {{ job.company }}
+        </p>
+
+        <p>
+            <strong>Location:</strong>
+            {{ job.location }}
+        </p>
+
+        <hr>
+
+        <form method="POST" enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            <label for="resume">
+                Upload Resume
+            </label>
+
+            <input
+                type="file"
+                name="resume"
+                id="resume"
+                accept=".pdf,.doc,.docx"
+                required
+            >
+
+            <label for="cover_letter">
+                Cover Letter
+            </label>
+
+            <textarea
+                name="cover_letter"
+                id="cover_letter"
+                rows="8"
+                placeholder="Write your cover letter..."
+            ></textarea>
+
+            <button type="submit" class="btn">
+                Submit Application
+            </button>
+
+        </form>
+
+        <br>
+
+        <a href="{% url 'job_detail' job.id %}">
+            ← Back to Job
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

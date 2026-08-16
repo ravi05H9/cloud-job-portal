@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apply · Waypoint</title>
+<style>
+/* ============================================
+   WAYPOINT — shared design tokens & base styles
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root{
+  --ink:        #14213D;
+  --ink-70:     rgba(20,33,61,.70);
+  --ink-50:     rgba(20,33,61,.50);
+  --paper:      #F5F3EE;
+  --paper-raised:#FFFFFF;
+  --amber:      #E8A33D;
+  --amber-dark: #C9822A;
+  --amber-tint: #FBEBD3;
+  --green:      #2F6E4E;
+  --green-tint: #E1EEE6;
+  --red:        #B3492F;
+  --red-tint:   #F5E3DD;
+  --slate:      #5B6472;
+  --slate-light:#8B93A0;
+  --border:     #DDD8CC;
+  --radius-sm:  6px;
+  --radius:     10px;
+  --radius-lg:  16px;
+  --shadow-sm:  0 1px 2px rgba(20,33,61,.06);
+  --shadow:     0 1px 2px rgba(20,33,61,.04), 0 12px 28px rgba(20,33,61,.08);
+  --shadow-lg:  0 4px 8px rgba(20,33,61,.06), 0 24px 48px rgba(20,33,61,.14);
+}
+
+*, *::before, *::after{ box-sizing:border-box; }
+html{ -webkit-text-size-adjust:100%; scroll-behavior:smooth; }
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:15px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  letter-spacing:-.01em;
+  margin:0 0 .4em;
+  color:var(--ink);
+}
+p{ margin:0 0 1em; color:var(--ink-70); }
+a{ color:inherit; text-decoration:none; }
+ul{ margin:0; padding:0; list-style:none; }
+button{ font-family:inherit; cursor:pointer; }
+input,select,textarea{ font-family:inherit; font-size:inherit; color:inherit; }
+::selection{ background:var(--amber-tint); color:var(--ink); }
+:focus-visible{ outline:2px solid var(--amber-dark); outline-offset:2px; border-radius:4px; }
+
+.mono{ font-family:'IBM Plex Mono', monospace; letter-spacing:.02em; }
+.container{ max-width:1180px; margin:0 auto; padding:0 32px; }
+
+/* ---------- Nav ---------- */
+.nav{
+  position:sticky; top:0; z-index:50;
+  background:rgba(245,243,238,.92);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--border);
+}
+.nav-inner{
+  max-width:1180px; margin:0 auto; padding:0 32px;
+  height:68px; display:flex; align-items:center; justify-content:space-between; gap:24px;
+}
+.brand{ display:flex; align-items:center; gap:10px; font-family:'Fraunces',serif; font-weight:600; font-size:19px; color:var(--ink); }
+.brand-mark{ width:30px; height:30px; flex:none; }
+.nav-links{ display:flex; align-items:center; gap:28px; }
+.nav-links a{
+  font-size:14px; font-weight:500; color:var(--ink-70);
+  padding:6px 0; border-bottom:2px solid transparent; transition:color .15s, border-color .15s;
+}
+.nav-links a:hover{ color:var(--ink); }
+.nav-links a.active{ color:var(--ink); border-bottom-color:var(--amber); }
+.nav-actions{ display:flex; align-items:center; gap:12px; }
+.nav-toggle{ display:none; background:none; border:none; padding:8px; }
+
+/* ---------- Buttons ---------- */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  font-size:14px; font-weight:600; padding:11px 20px; border-radius:8px;
+  border:1px solid transparent; transition:transform .12s ease, box-shadow .12s ease, background .15s, border-color .15s, color .15s;
+  white-space:nowrap;
+}
+.btn:active{ transform:translateY(1px); }
+.btn-primary{ background:var(--ink); color:var(--paper-raised); }
+.btn-primary:hover{ background:#1d2d52; box-shadow:var(--shadow-sm); }
+.btn-amber{ background:var(--amber); color:var(--ink); }
+.btn-amber:hover{ background:var(--amber-dark); }
+.btn-ghost{ background:transparent; color:var(--ink); border-color:var(--border); }
+.btn-ghost:hover{ background:var(--paper-raised); border-color:var(--slate-light); }
+.btn-text{ background:none; color:var(--ink-70); padding:11px 8px; }
+.btn-text:hover{ color:var(--ink); }
+.btn-block{ width:100%; }
+.btn-lg{ padding:14px 26px; font-size:15px; }
+.btn-sm{ padding:7px 14px; font-size:13px; }
+.btn[disabled]{ opacity:.45; pointer-events:none; }
+
+/* ---------- Cards / surfaces ---------- */
+.card{
+  background:var(--paper-raised); border:1px solid var(--border);
+  border-radius:var(--radius); box-shadow:var(--shadow-sm);
+}
+.pill{
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:12px; font-weight:600; padding:4px 10px; border-radius:999px;
+  background:var(--paper); border:1px solid var(--border); color:var(--slate);
+}
+.eyebrow{
+  font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--amber-dark);
+}
+
+/* ---------- Forms ---------- */
+.field{ margin-bottom:20px; }
+.field label{ display:block; font-size:13px; font-weight:600; color:var(--ink); margin-bottom:7px; }
+.field .hint{ font-size:12px; color:var(--slate-light); margin-top:6px; }
+.input, .select, .textarea{
+  width:100%; padding:12px 14px; background:var(--paper-raised);
+  border:1px solid var(--border); border-radius:8px; font-size:14px; color:var(--ink);
+  transition:border-color .15s, box-shadow .15s;
+}
+.input::placeholder, .textarea::placeholder{ color:var(--slate-light); }
+.input:focus, .select:focus, .textarea:focus{
+  border-color:var(--ink); box-shadow:0 0 0 3px rgba(20,33,61,.08); outline:none;
+}
+.textarea{ resize:vertical; min-height:110px; font-family:inherit; }
+.checkbox-row{ display:flex; align-items:flex-start; gap:10px; font-size:13px; color:var(--ink-70); }
+.checkbox-row input{ margin-top:3px; accent-color:var(--ink); }
+.field-error{ font-size:12px; color:var(--red); margin-top:6px; display:none; }
+.field.has-error .input{ border-color:var(--red); }
+.field.has-error .field-error{ display:block; }
+
+/* ---------- Footer ---------- */
+.site-footer{ border-top:1px solid var(--border); margin-top:80px; }
+.site-footer .container{ padding:36px 32px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+.site-footer .fmuted{ font-size:13px; color:var(--slate-light); }
+
+/* ---------- Misc ---------- */
+.divider{ height:1px; background:var(--border); border:none; margin:28px 0; }
+.skip-link{ position:absolute; left:-999px; top:0; background:var(--ink); color:#fff; padding:10px 16px; z-index:100; }
+.skip-link:focus{ left:12px; top:12px; }
+
+@media (max-width: 860px){
+  .nav-links{
+    position:fixed; inset:68px 0 auto 0; background:var(--paper); border-bottom:1px solid var(--border);
+    flex-direction:column; align-items:flex-start; padding:16px 32px 24px; gap:6px;
+    transform:translateY(-8px); opacity:0; pointer-events:none; transition:opacity .18s, transform .18s;
+  }
+  .nav-links a{ width:100%; padding:10px 0; }
+  .nav-links.open{ transform:translateY(0); opacity:1; pointer-events:auto; }
+  .nav-toggle{ display:block; }
+  .container{ padding:0 20px; }
+}
+
+
+.apply-layout{ display:grid; grid-template-columns:1fr 300px; gap:48px; padding:36px 0 90px; align-items:start; }
+.apply-head{ margin-bottom:8px; }
+.apply-head .eyebrow{ display:block; margin-bottom:8px; }
+
+.stepper{ display:flex; align-items:center; gap:6px; margin:26px 0 34px; }
+.step{ display:flex; align-items:center; gap:10px; flex:1; }
+.step-dot{ width:28px; height:28px; border-radius:50%; border:1.5px solid var(--border); background:var(--paper-raised);
+  display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:600; color:var(--slate-light); flex:none; transition:all .2s; }
+.step.active .step-dot{ border-color:var(--ink); background:var(--ink); color:#fff; }
+.step.done .step-dot{ border-color:var(--green); background:var(--green); color:#fff; }
+.step-label{ font-size:12.5px; font-weight:600; color:var(--slate-light); white-space:nowrap; }
+.step.active .step-label, .step.done .step-label{ color:var(--ink); }
+.step-line{ flex:1; height:1px; background:var(--border); margin:0 2px; }
+
+.apply-panel{ padding:32px; }
+.apply-panel h2{ font-size:20px; }
+.apply-panel > p.panel-lede{ margin-bottom:26px; }
+.form-grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:0 16px; }
+
+.dropzone{ border:1.5px dashed var(--border); border-radius:10px; padding:28px; text-align:center; color:var(--slate);
+  background:var(--paper); cursor:pointer; transition:border-color .15s, background .15s; }
+.dropzone:hover{ border-color:var(--ink); background:var(--paper-raised); }
+.dropzone svg{ margin-bottom:10px; color:var(--slate-light); }
+.dropzone .dz-title{ font-weight:600; color:var(--ink); font-size:14px; }
+.dropzone .dz-sub{ font-size:12.5px; margin-top:4px; }
+.file-chip{ display:flex; align-items:center; gap:10px; padding:10px 14px; border:1px solid var(--border); border-radius:8px; margin-top:12px; background:var(--paper-raised); }
+.file-chip span.fname{ flex:1; font-size:13px; font-weight:600; }
+.file-chip button{ background:none; border:none; color:var(--slate-light); }
+
+.step-actions{ display:flex; justify-content:space-between; margin-top:30px; }
+.wordcount{ text-align:right; font-size:11.5px; color:var(--slate-light); margin-top:6px; }
+
+.review-block{ border:1px solid var(--border); border-radius:10px; padding:16px 18px; margin-bottom:12px; background:var(--paper); }
+.review-block h5{ font-size:11.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--slate); margin-bottom:8px; }
+.review-block p{ font-size:13.5px; margin:0; color:var(--ink); }
+.review-edit{ float:right; font-size:12px; color:var(--slate); border-bottom:1px solid var(--border); }
+
+.summary-card{ padding:22px; position:sticky; top:88px; }
+.summary-card .job-logo{ margin-bottom:12px; }
+.summary-card h4{ font-size:15.5px; margin-bottom:2px; }
+.summary-card .job-company{ font-size:13px; margin-bottom:14px; }
+.summary-row{ display:flex; justify-content:space-between; font-size:12.8px; padding:8px 0; border-bottom:1px dashed var(--border); color:var(--slate); }
+.summary-row:last-child{ border-bottom:none; }
+
+.confirm-wrap{ max-width:560px; margin:50px auto 100px; text-align:center; }
+.confirm-icon{ width:64px; height:64px; border-radius:50%; background:var(--green-tint); color:var(--green); display:flex; align-items:center; justify-content:center; margin:0 auto 20px; }
+.ticket{ margin-top:34px; border-radius:16px; background:var(--ink); color:#fff; text-align:left; position:relative; overflow:hidden; box-shadow:var(--shadow-lg); }
+.ticket-main{ padding:26px 28px 22px; }
+.ticket-eyebrow{ color:var(--amber); font-size:11px; letter-spacing:.12em; text-transform:uppercase; font-family:'IBM Plex Mono',monospace; }
+.ticket-title{ font-family:'Fraunces',serif; font-size:21px; margin:8px 0 2px; }
+.ticket-sub{ color:rgba(255,255,255,.6); font-size:13px; }
+.ticket-perf{ position:relative; height:0; border-top:1.5px dashed rgba(255,255,255,.28); margin:0 28px; }
+.ticket-perf::before, .ticket-perf::after{ content:""; position:absolute; top:-11px; width:22px; height:22px; border-radius:50%; background:var(--paper); }
+.ticket-perf::before{ left:-39px; }
+.ticket-perf::after{ right:-39px; }
+.ticket-stub{ display:flex; justify-content:space-between; padding:18px 28px 24px; font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:rgba(255,255,255,.75); }
+.ticket-stub div strong{ display:block; color:#fff; font-size:13px; margin-top:2px; font-family:'IBM Plex Mono',monospace; }
+
+@media (max-width: 900px){
+  .apply-layout{ grid-template-columns:1fr; }
+  .summary-card{ position:static; }
+  .form-grid-2{ grid-template-columns:1fr; }
+  .step-label{ display:none; }
+  .ticket-perf::before{ left:-11px; }
+  .ticket-perf::after{ right:-11px; }
+}
+
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<nav class="nav">
+    <div class="nav-inner">
+      <a href="{% url 'job_list' %}" class="brand"><svg class="brand-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="16" cy="16" r="14.5" stroke="#14213D" stroke-width="1.4"/>
+  <path d="M21.5 10.5L17.6 17.6L10.5 21.5L14.4 14.4L21.5 10.5Z" fill="#E8A33D" stroke="#14213D" stroke-width="1.1" stroke-linejoin="round"/>
+  <circle cx="16" cy="16" r="1.6" fill="#14213D"/>
+</svg> Waypoint</a>
+      <div class="nav-links" id="navLinks">
+        <a href="{% url 'job_list' %}" class="active">Browse jobs</a>
+        <a href="{% url 'my_applications' %}" class="">My applications</a>
+      </div>
+      <div class="nav-actions">
+        <a href="{% url 'login' %}" class="btn btn-text">Log in</a>
+        <a href="{% url 'register' %}" class="btn btn-primary btn-sm">Sign up</a>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle menu"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M3 5.5h14M3 10h14M3 14.5h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+      </div>
+    </div>
+  </nav>
+<main id="main">
+<div class="container">
+    <div class="apply-head" style="padding-top:28px;">
+      <a href="job_detail.html" style="display:inline-flex; align-items:center; gap:6px; font-size:13px; color:var(--slate);" id="backToJob"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M16 10H4M9 5l-5 5 5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to role</a>
+    </div>
+  </div>
+
+  <div id="applyFlow">
+  <div class="container apply-layout">
+    <div>
+      <span class="eyebrow">Application</span>
+      <h2 style="font-size:26px; margin:8px 0 0;" id="applyHeading">Apply for this role</h2>
+
+      <div class="stepper" id="stepper">
+        <div class="step active" data-step="1"><div class="step-dot">1</div><div class="step-label">Contact</div></div>
+        <div class="step-line"></div>
+        <div class="step" data-step="2"><div class="step-dot">2</div><div class="step-label">Resume</div></div>
+        <div class="step-line"></div>
+        <div class="step" data-step="3"><div class="step-dot">3</div><div class="step-label">Cover letter</div></div>
+        <div class="step-line"></div>
+        <div class="step" data-step="4"><div class="step-dot">4</div><div class="step-label">Review</div></div>
+      </div>
+
+      <form id="applyForm" novalidate>
+        <div class="card apply-panel step-panel" data-panel="1">
+          <h2>Contact information</h2>
+          <p class="panel-lede">We'll use these details to keep you posted on your application.</p>
+          <div class="form-grid-2">
+            <div class="field"><label for="fname">First name</label><input class="input" id="fname" value="Amara" required></div>
+            <div class="field"><label for="lname">Last name</label><input class="input" id="lname" value="Reyes" required></div>
+          </div>
+          <div class="form-grid-2">
+            <div class="field"><label for="aEmail">Email</label><input class="input" type="email" id="aEmail" value="amara.reyes@example.com" required></div>
+            <div class="field"><label for="aPhone">Phone</label><input class="input" type="tel" id="aPhone" placeholder="(555) 123-4567" required></div>
+          </div>
+          <div class="field"><label for="aLocation">Current location</label><input class="input" id="aLocation" placeholder="City, State / Country"></div>
+          <div class="field"><label for="aLinkedin">LinkedIn or portfolio URL</label><input class="input" id="aLinkedin" placeholder="https://"></div>
+          <div class="step-actions">
+            <span></span>
+            <button type="button" class="btn btn-primary" data-next="2">Continue <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </div>
+        </div>
+
+        <div class="card apply-panel step-panel" data-panel="2" style="display:none;">
+          <h2>Resume &amp; work samples</h2>
+          <p class="panel-lede">PDF or Word doc, up to 10MB. This is what the hiring team sees first.</p>
+          <div class="field">
+            <label>Resume</label>
+            <div class="dropzone" id="dropzone">
+              <svg width="22" height="22" viewBox="0 0 20 20" fill="none"><path d="M10 13V3M6.5 6.5L10 3l3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 13v2a1.5 1.5 0 001.5 1.5h10a1.5 1.5 0 001.5-1.5v-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              <div class="dz-title">Click to upload, or drag a file here</div>
+              <div class="dz-sub">PDF, DOC or DOCX — max 10MB</div>
+            </div>
+            <div class="file-chip" id="fileChip" style="display:none;">
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M5 2.5h6.5L15 6v11a1 1 0 01-1 1H5a1 1 0 01-1-1v-13a1 1 0 011-1z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M11 2.5V6h4" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+              <span class="fname" id="fileName">resume_amara_reyes.pdf</span>
+              <button type="button" id="removeFile"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+            </div>
+          </div>
+          <div class="field"><label for="aPortfolio">Portfolio / GitHub link (optional)</label><input class="input" id="aPortfolio" placeholder="https://"></div>
+          <div class="step-actions">
+            <button type="button" class="btn btn-ghost" data-back="1"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M16 10H4M9 5l-5 5 5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
+            <button type="button" class="btn btn-primary" data-next="3">Continue <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </div>
+        </div>
+
+        <div class="card apply-panel step-panel" data-panel="3" style="display:none;">
+          <h2>Cover letter</h2>
+          <p class="panel-lede">Tell the team why this role, and why you — three or four sentences is plenty.</p>
+          <div class="field">
+            <label for="aCover">Cover letter</label>
+            <textarea class="textarea" id="aCover" rows="9" maxlength="1200" placeholder="I'm excited about this role because…"></textarea>
+            <div class="wordcount"><span id="coverCount">0</span>/1200</div>
+          </div>
+          <label class="checkbox-row"><input type="checkbox" id="referral"> I was referred by someone on the team</label>
+          <div class="step-actions">
+            <button type="button" class="btn btn-ghost" data-back="2"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M16 10H4M9 5l-5 5 5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
+            <button type="button" class="btn btn-primary" data-next="4">Continue <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </div>
+        </div>
+
+        <div class="card apply-panel step-panel" data-panel="4" style="display:none;">
+          <h2>Review &amp; submit</h2>
+          <p class="panel-lede">Take one last look before it goes to the hiring team.</p>
+          <div class="review-block"><a class="review-edit" data-back="1">Edit</a><h5>Contact</h5><p id="reviewContact"></p></div>
+          <div class="review-block"><a class="review-edit" data-back="2">Edit</a><h5>Resume</h5><p id="reviewResume"></p></div>
+          <div class="review-block"><a class="review-edit" data-back="3">Edit</a><h5>Cover letter</h5><p id="reviewCover"></p></div>
+          <label class="checkbox-row" style="margin:18px 0 6px;"><input type="checkbox" id="confirmTruth" required> I confirm the information above is accurate.</label>
+          <div class="step-actions">
+            <button type="button" class="btn btn-ghost" data-back="3"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M16 10H4M9 5l-5 5 5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
+            <button type="submit" class="btn btn-amber btn-lg">Submit application <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <aside>
+      <div class="card summary-card">
+        <div class="job-logo" id="sumLogo" style="width:44px;height:44px;font-size:15px;">··</div>
+        <h4 id="sumTitle">Role title</h4>
+        <div class="job-company" id="sumCompany">Company</div>
+        <div class="summary-row"><span>Location</span><span id="sumLocation">—</span></div>
+        <div class="summary-row"><span>Type</span><span id="sumType">—</span></div>
+        <div class="summary-row"><span>Salary</span><span id="sumSalary">—</span></div>
+        <div class="summary-row"><span>Job ID</span><span class="mono" id="sumId">—</span></div>
+      </div>
+    </aside>
+  </div>
+  </div>
+
+  <div id="confirmView" class="container" style="display:none;">
+    <div class="confirm-wrap">
+      <div class="confirm-icon"><svg width="30" height="30" viewBox="0 0 20 20" fill="none"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <h2 style="font-size:26px;">Application sent</h2>
+      <p>You'll hear back from the hiring team within 5&ndash;7 business days. We've saved a copy to your applications.</p>
+
+      <div class="ticket">
+        <div class="ticket-main">
+          <div class="ticket-eyebrow">Boarding confirmation</div>
+          <div class="ticket-title" id="ticketTitle">Role title</div>
+          <div class="ticket-sub" id="ticketCompany">Company · Location</div>
+        </div>
+        <div class="ticket-perf"></div>
+        <div class="ticket-stub">
+          <div>Applicant<strong id="ticketName">—</strong></div>
+          <div>Status<strong>Applied</strong></div>
+          <div>Ref<strong class="mono" id="ticketRef">—</strong></div>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:12px; justify-content:center; margin-top:32px;">
+        <a href="{% url 'job_list' %}" class="btn btn-ghost">Browse more roles</a>
+        <a href="{% url 'my_applications' %}" class="btn btn-primary">View my applications <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+    </div>
+  </div>
+</main>
+  <footer class="site-footer">
+    <div class="container">
+      <a href="{% url 'job_list' %}" class="brand" style="font-size:15px;"><svg class="brand-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="16" cy="16" r="14.5" stroke="#14213D" stroke-width="1.4"/>
+  <path d="M21.5 10.5L17.6 17.6L10.5 21.5L14.4 14.4L21.5 10.5Z" fill="#E8A33D" stroke="#14213D" stroke-width="1.1" stroke-linejoin="round"/>
+  <circle cx="16" cy="16" r="1.6" fill="#14213D"/>
+</svg> Waypoint</a>
+      <span class="fmuted">&copy; 2026 Waypoint, Inc. &mdash; find the next stop on your career route.</span>
+    </div>
+  </footer>
+<script>
+document.getElementById('navToggle')?.addEventListener('click', () => {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+
+    const JOBS = [
+      { id:"WP-101", title:"Senior Product Designer", company:"Northwind Studio", initials:"NW", color:"#E8A33D",
+        location:"Remote · US", type:"Full-time", category:"Design", level:"Senior", salary:"$130k – $160k",
+        posted:"2 days ago", tags:["Figma","Design systems","B2B SaaS"],
+        blurb:"Own end-to-end product design for our commerce platform, from discovery through polished, shipped UI." },
+      { id:"WP-102", title:"Backend Engineer, Payments", company:"Fernbank Systems", initials:"FS", color:"#2F6E4E",
+        location:"Austin, TX", type:"Full-time", category:"Engineering", level:"Mid", salary:"$145k – $175k",
+        posted:"1 day ago", tags:["Go","PostgreSQL","AWS"],
+        blurb:"Build and harden the ledger services that move money for 40,000+ merchants every day." },
+      { id:"WP-103", title:"Data Analyst, Marketplace", company:"Coldwater Analytics", initials:"CA", color:"#5B6472",
+        location:"Remote · Global", type:"Contract", category:"Data", level:"Mid", salary:"$70/hr",
+        posted:"4 days ago", tags:["SQL","dbt","Looker"],
+        blurb:"Turn marketplace transaction data into the weekly story leadership uses to steer supply and demand." },
+      { id:"WP-104", title:"Customer Success Manager", company:"Harbor & Kin", initials:"HK", color:"#B3492F",
+        location:"Chicago, IL", type:"Full-time", category:"Customer Success", level:"Mid", salary:"$85k – $105k",
+        posted:"6 days ago", tags:["Onboarding","Renewals","SaaS"],
+        blurb:"Be the steady point of contact for a book of mid-market accounts, from kickoff through renewal." },
+      { id:"WP-105", title:"Frontend Engineer", company:"Lumen Robotics", initials:"LR", color:"#14213D",
+        location:"San Francisco, CA", type:"Full-time", category:"Engineering", level:"Senior", salary:"$150k – $185k",
+        posted:"Today", tags:["React","TypeScript","WebGL"],
+        blurb:"Build the operator console that pilots fleets of warehouse robots in real time." },
+      { id:"WP-106", title:"Marketing Intern", company:"Cedar & Co", initials:"CC", color:"#C9822A",
+        location:"Remote · US", type:"Internship", category:"Marketing", level:"Entry", salary:"$22/hr",
+        posted:"3 days ago", tags:["Content","Social","Analytics"],
+        blurb:"Support campaign launches end to end and learn the craft of B2C growth marketing on a small team." },
+      { id:"WP-107", title:"DevOps Engineer", company:"Portside Cloud", initials:"PC", color:"#2F6E4E",
+        location:"Remote · EU", type:"Full-time", category:"Engineering", level:"Mid", salary:"€65k – €80k",
+        posted:"5 days ago", tags:["Kubernetes","Terraform","CI/CD"],
+        blurb:"Own the deploy pipeline and on-call tooling for a platform running across three cloud regions." },
+      { id:"WP-108", title:"UX Researcher", company:"Northwind Studio", initials:"NW", color:"#E8A33D",
+        location:"Remote · US", type:"Part-time", category:"Design", level:"Senior", salary:"$60/hr",
+        posted:"1 week ago", tags:["Interviews","Usability","Synthesis"],
+        blurb:"Run a steady cadence of generative and evaluative research to keep design decisions grounded." },
+    ];
+
+    const params = new URLSearchParams(window.location.search);
+    const jobId = params.get('id') || JOBS[0].id;
+    const job = JOBS.find(j => j.id === jobId) || JOBS[0];
+
+    document.getElementById('applyHeading').textContent = 'Apply — ' + job.title;
+    document.getElementById('backToJob').href = 'job_detail.html?id=' + job.id;
+    document.getElementById('sumLogo').textContent = job.initials;
+    document.getElementById('sumLogo').style.background = job.color;
+    document.getElementById('sumTitle').textContent = job.title;
+    document.getElementById('sumCompany').textContent = job.company;
+    document.getElementById('sumLocation').textContent = job.location;
+    document.getElementById('sumType').textContent = job.type;
+    document.getElementById('sumSalary').textContent = job.salary;
+    document.getElementById('sumId').textContent = job.id;
+
+    let current = 1;
+    let fileAttached = false;
+
+    function goTo(step){
+      document.querySelectorAll('.step-panel').forEach(p => p.style.display = (+p.dataset.panel === step) ? '' : 'none');
+      document.querySelectorAll('.step').forEach(s => {
+        const n = +s.dataset.step;
+        s.classList.toggle('active', n === step);
+        s.classList.toggle('done', n < step);
+      });
+      current = step;
+      if(step === 4) fillReview();
+      window.scrollTo({ top: document.getElementById('stepper').offsetTop - 100, behavior:'smooth' });
+    }
+
+    document.querySelectorAll('[data-next]').forEach(btn => btn.addEventListener('click', () => goTo(+btn.dataset.next)));
+    document.querySelectorAll('[data-back]').forEach(btn => btn.addEventListener('click', () => goTo(+btn.dataset.back)));
+
+    const dropzone = document.getElementById('dropzone');
+    const fileChip = document.getElementById('fileChip');
+    dropzone.addEventListener('click', () => {
+      fileAttached = true;
+      dropzone.style.display = 'none';
+      fileChip.style.display = 'flex';
+    });
+    document.getElementById('removeFile').addEventListener('click', () => {
+      fileAttached = false;
+      dropzone.style.display = '';
+      fileChip.style.display = 'none';
+    });
+
+    const cover = document.getElementById('aCover');
+    cover.addEventListener('input', () => { document.getElementById('coverCount').textContent = cover.value.length; });
+
+    function fillReview(){
+      const fname = document.getElementById('fname').value, lname = document.getElementById('lname').value;
+      document.getElementById('reviewContact').textContent = `${fname} ${lname} · ${document.getElementById('aEmail').value} · ${document.getElementById('aPhone').value || 'no phone on file'}`;
+      document.getElementById('reviewResume').textContent = fileAttached ? document.getElementById('fileName').textContent : 'No resume attached yet';
+      document.getElementById('reviewCover').textContent = cover.value.trim() ? (cover.value.slice(0,160) + (cover.value.length > 160 ? '…' : '')) : 'No cover letter written';
+    }
+
+    document.getElementById('applyForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const fname = document.getElementById('fname').value, lname = document.getElementById('lname').value;
+      document.getElementById('applyFlow').style.display = 'none';
+      document.getElementById('confirmView').style.display = '';
+      document.getElementById('ticketTitle').textContent = job.title;
+      document.getElementById('ticketCompany').textContent = job.company + ' · ' + job.location;
+      document.getElementById('ticketName').textContent = fname + ' ' + lname;
+      document.getElementById('ticketRef').textContent = job.id + '-' + Math.floor(1000 + Math.random()*9000);
+      window.scrollTo({ top:0, behavior:'smooth' });
+    });
+
+</script>
+</body>
+</html>
