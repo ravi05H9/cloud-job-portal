@@ -299,26 +299,7 @@ document.getElementById('navToggle')?.addEventListener('click', () => {
       pwToggle.textContent = show ? 'Hide' : 'Show';
     });
 
-    document.getElementById('loginForm')?.addEventListener('submit', (e) => {
-      e.preventDefault();
-      let valid = true;
-      const email = document.getElementById('email');
-      const emailField = document.getElementById('emailField');
-      const pw = document.getElementById('password');
-      const pwField = document.getElementById('pwField');
-      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value);
-      emailField.classList.toggle('has-error', !emailOk);
-      if(!emailOk) valid = false;
-      const pwOk = pw.value.length >= 6;
-      pwField.classList.toggle('has-error', !pwOk);
-      if(!pwOk) valid = false;
-      if(valid){
-        const btn = e.target.querySelector('button[type=submit]');
-        btn.textContent = 'Logging in…';
-        btn.disabled = true;
-        setTimeout(() => { window.location.href = '/'; }, 500);
-      }
-    });
+    
 
 </script>
 </body>
