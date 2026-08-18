@@ -252,10 +252,11 @@ input,select,textarea{ font-family:inherit; font-size:inherit; color:inherit; }
         <h2>Log in to Waypoint</h2>
         <p>New here? <a href="{% url 'register' %}" style="color:var(--ink); font-weight:600; border-bottom:1px solid var(--amber);">Create an account</a> instead.</p>
 
-        <form id="loginForm" novalidate>
+        <form id="loginForm" method="post" novalidate>
+        {% csrf_token %}
           <div class="field" id="emailField">
             <label for="email">Email address</label>
-            <input class="input" type="email" id="email" name="email" placeholder="you@example.com" required>
+            <input class="input" type="email" id="email" name="username" placeholder="you@example.com" required>
             <div class="field-error">Enter a valid email address.</div>
           </div>
           <div class="field" id="pwField">
