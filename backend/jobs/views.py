@@ -6,6 +6,46 @@ from django.core.exceptions import ValidationError
 from .models import Job, Application
 
 
+def guess_category(title, skills):
+    t = title.lower()
+    if any(k in t for k in ["designer", "design intern", "ux designer", "ui/ux"]):
+        return "Design"
+    if any(k in t for k in ["developer", "engineer", "architect", "devops", "qa", "test engineer"]):
+        return "Engineering"
+    if any(k in t for k in ["data analyst", "data entry", "sql developer"]):
+        return "Data"
+    if any(k in t for k in ["marketing", "content writer", "content reviewer"]):
+        return "Marketing"
+    if any(k in t for k in ["sales", "customer", "support associate", "hr executive", "operations executive", "financial analyst"]):
+        return "Customer Success"
+    s = skills.lower()
+    if any(k in s for k in ["figma", "adobe xd", "photoshop", "illustrator"]):
+        return "Design"
+    if any(k in s for k in ["sql", "power bi", "looker", "excel"]):
+        return "Data"
+    return "Engineering"
+
+
+def guess_level(title):
+    text = title.lower()
+    if any(k in text for k in ["senior", "sr.", "lead"]):
+        return "Senior"
+    if any(k in text for k in ["intern", "entry", "associate", "junior"]):
+        return "Entry"
+    return "Mid"
+
+
+def guess_type(title):
+    text = title.lower()
+    if "intern" in text:
+        return "Internship"
+    if "contract" in text:
+        return "Contract"
+    if "part-time" in text:
+        return "Part-time"
+    return "Full-time"
+
+
 def job_list(request):
     jobs = Job.objects.all().order_by('-id')
     jobs_data = []
@@ -19,9 +59,9 @@ def job_list(request):
             "initials": initials,
             "color": "#E8A33D",
             "location": j.location,
-            "type": "Full-time",
-            "category": "General",
-            "level": "Mid",
+            "type": guess_type(j.title),
+            "category": guess_category(j.title, j.skills),
+            "level": guess_level(j.title),
             "salary": j.salary,
             "posted": "Recently",
             "tags": tags,
@@ -44,9 +84,9 @@ def job_detail(request, job_id):
         "initials": initials,
         "color": "#E8A33D",
         "location": job.location,
-        "type": "Full-time",
-        "category": "General",
-        "level": "Mid",
+        "type": guess_type(job.title),
+        "category": guess_category(job.title, job.skills),
+        "level": guess_level(job.title),
         "salary": job.salary,
         "posted": "Recently",
         "tags": tags,

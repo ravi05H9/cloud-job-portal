@@ -422,20 +422,23 @@ document.getElementById('navToggle')?.addEventListener('click', () => {
     document.getElementById('searchBtn').addEventListener('click', render);
     document.getElementById('searchInput').addEventListener('keyup', e => { if(e.key === 'Enter') render(); });
     document.querySelectorAll('.f-type, .f-cat, .f-level').forEach(c => c.addEventListener('change', render));
-    document.getElementById('sortSelect').addEventListener('change', render);
-    document.getElementById('resetFilters').addEventListener('click', resetAll);
-    document.querySelectorAll('[data-quick]').forEach(chip => {
-      chip.addEventListener('click', () => {
-        const v = chip.dataset.quick;
-        const typeBox = document.querySelector(`.f-type[value="${v}"]`);
-        const catBox = document.querySelector(`.f-cat[value="${v}"]`);
-        if(v === 'Remote'){ document.getElementById('searchInput').value = 'remote'; }
-        else if(typeBox){ typeBox.checked = !typeBox.checked; }
-        else if(catBox){ catBox.checked = !catBox.checked; }
+
+    document.querySelectorAll('.pill[data-quick]').forEach(pill => {
+      pill.addEventListener('click', () => {
+        const v = pill.dataset.quick;
+        if (v === 'Remote') {
+          document.getElementById('searchInput').value = 'Remote';
+        } else {
+          const typeBox = document.querySelector(`.f-type[value="${v}"]`);
+          const catBox = document.querySelector(`.f-cat[value="${v}"]`);
+          if (typeBox) typeBox.checked = !typeBox.checked;
+          else if (catBox) catBox.checked = !catBox.checked;
+        }
         render();
       });
     });
-
+    document.getElementById('sortSelect').addEventListener('change', render);
+    document.getElementById('resetFilters').addEventListener('click', resetAll);
     render();
 
 </script>
